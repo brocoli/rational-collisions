@@ -2,9 +2,12 @@
 module Base.Interval
   ( Interval(..)
   , newInterval
-  , prettyInterval
-  , prettyMaybeInterval
+  , translateInterval
   ) where
+
+import Util.Util
+  ( mapTuple
+  )
 
 import Base.Openess
   ( Openess(..)
@@ -16,32 +19,29 @@ import Base.Coordinate
 
 import Base.IntervalWall
   ( IntervalWall(..)
+  , translateIntervalWall
   )
+
 
 type Interval = (IntervalWall, IntervalWall)
 
+makeOpenInterval :: Coordinate -> Coordinate -> Interval
+makeOpenInterval small big = (IntervalWall small GT, IntervalWall big LT)
+
+makeClosedInterval :: Coordinate -> Coordinate -> Interval
+makeClosedInterval small big = (IntervalWall small EQ, IntervalWall big EQ)
+-- makeClosedInterval = ((.).(.)) (join (***) $ flip IntervalWall EQ) (,)
+
 newInterval :: Openess -> Coordinate -> Coordinate -> Maybe Interval
-newInterval Open small big =
-  if small < big
-    then Just (IntervalWall small GT, IntervalWall big LT)
-    else Nothing
-newInterval Closed small big =
-  if small <= big
-    then Just (IntervalWall small EQ, IntervalWall big EQ)
-    else Nothing
+newInterval openess small big
+  | small `comp` big = Just $ makeInterval small big
+  | otherwise        = Nothing
+  where makeInterval = case openess of
+                         Open   -> makeOpenInterval
+                         Closed -> makeClosedInterval
+        comp         = case openess of
+                         Open   -> (<)
+                         Closed -> (<=)
 
-prettyInterval :: Interval -> String
-prettyInterval (IntervalWall small smallL, IntervalWall big bigL) =
-  concat [smallBracket, show small, ", ", show big, bigBracket]
-    where smallBracket = case smallL of
-                           LT -> "?"
-                           EQ -> "["
-                           GT -> "("
-          bigBracket   = case bigL   of
-                           LT -> ")"
-                           EQ -> "]"
-                           GT -> "?"
-
-prettyMaybeInterval :: Maybe Interval -> String
-prettyMaybeInterval (Just interval) = "Just " ++ prettyInterval interval
-prettyMaybeInterval Nothing         = "Nothing"
+translateInterval :: Coordinate -> Interval -> Interval
+translateInterval = mapTuple . translateIntervalWall
