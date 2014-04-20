@@ -11,7 +11,7 @@ import Base.Coordinate
 data IntervalWall = IntervalWall
   { lean_     :: Ordering
   , position_ :: Coordinate
-  } deriving (Ord, Eq, Show)
+  } deriving (Ord,Eq,Show)
 
 translateIntervalWall :: Coordinate -> IntervalWall -> IntervalWall
 translateIntervalWall trans (IntervalWall lean pos) =

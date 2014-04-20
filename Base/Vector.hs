@@ -7,13 +7,12 @@ module Base.Vector
 import Base.Coordinate
   ( Coordinate
   )
-
 import Util.Util
   ( parallelAp
   )
 
 
-type Vector = (Coordinate, Coordinate)
+type Vector = (Coordinate,Coordinate)
 
 
 sumVectors :: Vector -> Vector -> Vector

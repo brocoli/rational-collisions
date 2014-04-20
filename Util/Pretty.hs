@@ -8,11 +8,9 @@ module Util.Pretty
 import Base.IntervalWall
   ( IntervalWall(..)
   )
-
 import Base.Interval
   ( Interval
   )
-
 import Primitive.AABB
   ( AABB
   )
@@ -31,7 +29,7 @@ prettyInterval (IntervalWall smallL small, IntervalWall bigL big) =
                            GT -> "?"
 
 prettyAABB :: AABB -> String
-prettyAABB (xInterval, yInterval) =
+prettyAABB (xInterval,yInterval) =
   concat [prettyInterval xInterval, " x ", prettyInterval yInterval]
 
 prettyfyMaybe :: (a -> String) -> Maybe a -> String
