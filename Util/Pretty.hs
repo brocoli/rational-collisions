@@ -19,7 +19,7 @@ import Primitive.AABB
 
 
 prettyInterval :: Interval -> String
-prettyInterval (IntervalWall small smallL, IntervalWall big bigL) =
+prettyInterval (IntervalWall smallL small, IntervalWall bigL big) =
   concat [smallBracket, show small, ", ", show big, bigBracket]
     where smallBracket = case smallL of
                            LT -> "?"

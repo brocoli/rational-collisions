@@ -32,13 +32,13 @@ import Primitive.AABB
 data Body = Body
   { velocity_ :: Vector
   , shape_    :: AABB
-  } deriving(Ord,Eq,Show)
+  } deriving (Ord, Eq, Show)
 
 
 newBody :: Openess -> Coordinate -> Coordinate
                    -> Coordinate -> Coordinate -> Maybe Body
-newBody o l u r d = do
-  aabb <- newAABB o l u r d
+newBody openess left top right bottom = do
+  aabb <- newAABB openess left top right bottom
   return $ Body (0,0) aabb
 
 setVelocity :: Vector -> Body -> Body

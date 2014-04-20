@@ -9,10 +9,10 @@ import Base.Coordinate
   )
 
 data IntervalWall = IntervalWall
-  { position_ :: Coordinate
-  , lean_     :: Ordering
-  } deriving (Ord,Eq,Show)
+  { lean_     :: Ordering
+  , position_ :: Coordinate
+  } deriving (Ord, Eq, Show)
 
 translateIntervalWall :: Coordinate -> IntervalWall -> IntervalWall
-translateIntervalWall trans (IntervalWall pos lean) =
-  IntervalWall (pos+trans) lean
+translateIntervalWall trans (IntervalWall lean pos) =
+  IntervalWall lean $ pos + trans
