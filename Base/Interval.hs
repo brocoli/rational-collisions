@@ -25,6 +25,7 @@ import Base.IntervalWall
 
 type Interval = (IntervalWall, IntervalWall)
 
+
 makeOpenInterval :: Coordinate -> Coordinate -> Interval
 makeOpenInterval small big = (IntervalWall small GT, IntervalWall big LT)
 
@@ -36,12 +37,10 @@ newInterval :: Openess -> Coordinate -> Coordinate -> Maybe Interval
 newInterval openess small big
   | small `comp` big = Just $ makeInterval small big
   | otherwise        = Nothing
-  where makeInterval = case openess of
-                         Open   -> makeOpenInterval
-                         Closed -> makeClosedInterval
-        comp         = case openess of
-                         Open   -> (<)
-                         Closed -> (<=)
+  where (makeInterval, comp) =
+          case openess of
+            Open   -> (  makeOpenInterval, (<) )
+            Closed -> (makeClosedInterval, (<=))
 
 translateInterval :: Coordinate -> Interval -> Interval
 translateInterval = mapTuple . translateIntervalWall
