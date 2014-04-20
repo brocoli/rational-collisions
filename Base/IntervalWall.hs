@@ -1,34 +1,13 @@
 
-module Primitives.IntervalWall
+module Base.IntervalWall
   ( IntervalWall(..)
-  , sumPosOpenSize
   ) where
 
-import Primitives.Coord
-  ( Coord
-  )
-
-import Primitives.OpenSize
-  ( Openess(..)
-  , OpenSize(..)
+import Base.Coordinate
+  ( Coordinate
   )
 
 data IntervalWall = IntervalWall
-  { _IntervalWallPosition :: Coord
-  , _IntervalWallLean     :: Ordering
-  } deriving (Eq,Ord,Show)
-
-
-sumPosOpenSize :: Coord -> OpenSize -> Maybe IntervalWall
-sumPosOpenSize center size =
-  case compare magnitude 0 of
-    LT -> case openess of
-            Closed -> Just $ IntervalWall position EQ
-            Open   -> Just $ IntervalWall position GT
-    EQ -> Nothing
-    GT -> case openess of
-            Open   -> Just $ IntervalWall position LT
-            Closed -> Just $ IntervalWall position EQ
-  where magnitude = _OpenSizeMagnitude size
-        position  = center + magnitude
-        openess   = _OpenSizeOpeness size
+  { position_ :: Coordinate
+  , lean_     :: Ordering
+  } deriving (Ord,Eq,Show)
