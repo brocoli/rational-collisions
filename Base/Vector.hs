@@ -4,11 +4,11 @@ module Base.Vector
   , sumVectors
   ) where
 
-import Base.Coordinate
-  ( Coordinate
-  )
 import Util.Util
   ( parallelAp
+  )
+import Base.Coordinate
+  ( Coordinate
   )
 
 

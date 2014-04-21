@@ -3,6 +3,7 @@ module Base.Interval
   ( Interval(..)
   , newInterval
   , translateInterval
+  , hasZero
   ) where
 
 import Util.Util
@@ -40,3 +41,7 @@ newInterval openess small big
 
 translateInterval :: Coordinate -> Interval -> Interval
 translateInterval = mapTuple . translateIntervalWall
+
+hasZero :: Interval -> Bool
+hasZero (small, big) = let zero = IntervalWall EQ 0 in
+                         small <= zero && zero <= big

@@ -3,6 +3,8 @@ module Util.Util
   ( mapTuple
   , (>|<)
   , parallelAp
+  , swapCross
+  , (.:)
   ) where
 
 import Control.Monad
@@ -20,3 +22,9 @@ mapTuple = join (***)
 
 parallelAp :: (a -> b -> c) -> (a,a) -> (b,b) -> (c,c)
 parallelAp = join (>|<)
+
+swapCross :: ((a,b),(c,d)) -> ((a,c),(b,d))
+swapCross ((x,y),(z,w)) = ((x,z),(y,w))
+
+(.:) :: (c -> d) -> (a -> b -> c) -> a -> b -> d
+(.:) = (.).(.)

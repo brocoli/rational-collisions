@@ -15,6 +15,7 @@ import Primitive.AABB
   ( AABB
   )
 
+import Data.Ratio
 
 prettyInterval :: Interval -> String
 prettyInterval (IntervalWall smallL small, IntervalWall bigL big) =
