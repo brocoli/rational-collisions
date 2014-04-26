@@ -14,6 +14,9 @@ import Control.Arrow
 import Control.Monad
   ( join
   )
+import Data.Maybe
+  ( fromJust
+  )
 import Util.Util
   ( parallelAp
   , swapCross
@@ -23,7 +26,7 @@ import Base.Time
   , TimeFraction
   )
 import Base.Openess
-  ( Openess
+  ( Openess(..)
   )
 import Base.Coordinate
   ( Coordinate
@@ -70,7 +73,7 @@ stepBody :: Body -> Body
 stepBody = updateBody 1
 
 
--- Here are a bunch of"building blocks for getBodyCollisionTimeToZero
+-- Here are a bunch of building blocks for getBodyCollisionTimeToZero
 solveTimeToZero :: Bool -> Bool -> Coordinate -> IntervalWall -> Time
 solveTimeToZero leads containsZero vel (IntervalWall lean pos) =
   if vel == 0
@@ -91,8 +94,8 @@ getTimesToZero containsZero interval vel =
   let (leading,trailing) = if vel < 0
                              then (fst,snd)
                              else (snd,fst) in
-    (solveTimeToZero True containsZero vel $ leading interval,
-      solveTimeToZero False containsZero vel $ trailing interval)
+    (solveTimeToZero True  containsZero vel $ leading  interval,
+     solveTimeToZero False containsZero vel $ trailing interval)
 
 getIntervalTimesToZero :: Coordinate -> Interval -> TimeInterval
 getIntervalTimesToZero = flip . join $ getTimesToZero . hasZero
@@ -107,9 +110,30 @@ get2DCollisionToZeroInterval :: Body -> TimeInterval
 get2DCollisionToZeroInterval =
   (uncurry max *** uncurry min) . swapCross . getBodyTimesToZero
 
+getLeadingCornerOpeness :: Body -> Maybe Openess
+getLeadingCornerOpeness
+  ( Body (vx,vy)
+    ((IntervalWall smallXLean _,IntervalWall bigXLean _),
+     (IntervalWall smallYLean _,IntervalWall bigYLean _)) ) =
+  do
+    isXClosed <- case compare vx 0 of
+                   LT -> Just $ smallXLean == EQ
+                   EQ -> Nothing
+                   GT -> Just $ bigXLean == EQ
+    isYClosed <- case compare vy 0 of
+                   LT -> Just $ smallYLean == EQ
+                   EQ -> Nothing
+                   GT -> Just $ bigYLean == EQ
+    return $ if isXClosed && isYClosed
+               then Closed
+               else Open
+
 getBodyCollisionTimeToZero :: Body -> Maybe Time
 getBodyCollisionTimeToZero body =
   let (leading,trailing) = get2DCollisionToZeroInterval body in
-    if leading > trailing
-      then Nothing
-      else Just leading
+    case compare leading trailing of
+      LT -> Just leading
+      EQ -> case fromJust $ getLeadingCornerOpeness body of
+              Open   -> Nothing
+              Closed -> Just leading
+      GT -> Nothing
