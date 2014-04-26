@@ -1,4 +1,8 @@
 
+module Test.Test
+  ( testAll
+  ) where
+
 import Core.Body
 import Data.Maybe
 import Data.Ratio
