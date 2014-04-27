@@ -3,10 +3,14 @@ module Primitive.AABB
   ( AABB(..)
   , newAABB
   , translateAABB
+  , minkowskySumAABBs
   ) where
 
 import Util.Util
-  ( parallelAp
+  ( mapTuple
+  , parallelAp
+  , swapCross
+  , (.:)
   )
 import Base.Openess
   ( Openess(..)
@@ -21,6 +25,7 @@ import Base.Interval
   ( Interval(..)
   , newInterval
   , translateInterval
+  , minkowskySumIntervals
   )
 
 
@@ -36,3 +41,7 @@ newAABB openess left top right bottom = do
 
 translateAABB :: Vector -> AABB -> AABB
 translateAABB = parallelAp translateInterval
+
+minkowskySumAABBs :: AABB -> AABB -> AABB
+minkowskySumAABBs =
+  ((mapTuple $ uncurry minkowskySumIntervals) . swapCross) .: (,)

@@ -6,6 +6,7 @@ module Core.Body
   , updateBody
   , stepBody
   , getBodyCollisionTimeToZero
+  , setupBodyCollisionTest
   ) where
 
 import Control.Arrow
@@ -34,6 +35,7 @@ import Base.Coordinate
 import Base.Vector
   ( Vector
   , sumVectors
+  , subtractVectors
   )
 import Base.IntervalWall
   ( IntervalWall(..)
@@ -46,6 +48,7 @@ import Primitive.AABB
   ( AABB
   , newAABB
   , translateAABB
+  , minkowskySumAABBs
   )
 
 
@@ -137,3 +140,7 @@ getBodyCollisionTimeToZero body =
               Open   -> Nothing
               Closed -> Just leading
       GT -> Nothing
+
+setupBodyCollisionTest :: Body -> Body -> Body
+setupBodyCollisionTest (Body vel1 shape1) (Body vel2 shape2) =
+  Body (vel2 `subtractVectors` vel1) (minkowskySumAABBs shape1 shape2)

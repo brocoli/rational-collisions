@@ -2,6 +2,7 @@
 module Base.Vector
   ( Vector(..)
   , sumVectors
+  , subtractVectors
   ) where
 
 import Util.Util
@@ -17,3 +18,6 @@ type Vector = (Coordinate,Coordinate)
 
 sumVectors :: Vector -> Vector -> Vector
 sumVectors = parallelAp (+)
+
+subtractVectors :: Vector -> Vector -> Vector
+subtractVectors = parallelAp (-)
