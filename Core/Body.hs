@@ -6,7 +6,7 @@ module Core.Body
   , updateBody
   , stepBody
   , getBodyCollisionTimeToZero
-  , setupBodyCollisionTest
+  , getCollisionTime
   ) where
 
 import Control.Arrow
@@ -21,6 +21,7 @@ import Data.Maybe
 import Util.Util
   ( parallelAp
   , swapCross
+  , (.:)
   )
 import Base.Time
   ( Time(..)
@@ -144,3 +145,6 @@ getBodyCollisionTimeToZero body =
 setupBodyCollisionTest :: Body -> Body -> Body
 setupBodyCollisionTest (Body vel1 shape1) (Body vel2 shape2) =
   Body (vel2 `subtractVectors` vel1) (minkowskySumAABBs shape1 shape2)
+
+getCollisionTime :: Body -> Body -> Maybe Time
+getCollisionTime = getBodyCollisionTimeToZero .: setupBodyCollisionTest
