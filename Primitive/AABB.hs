@@ -44,4 +44,4 @@ translateAABB = parallelAp translateInterval
 
 minkowskySumAABBs :: AABB -> AABB -> AABB
 minkowskySumAABBs =
-  ((mapTuple $ uncurry minkowskySumIntervals) . swapCross) .: (,)
+  (mapTuple (uncurry minkowskySumIntervals) . swapCross) .: (,)

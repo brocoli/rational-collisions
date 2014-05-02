@@ -11,9 +11,9 @@ import System.IO
 import Base.Openess
 import Util.Pretty
 
-anchors = [ (0,0), (2,0), (2,2), (0,2), ((-2),2), ((-2),0), ((-2),(-2)), (0,(-2)), (2,(-2)) ]
+anchors = [ (0,0), (2,0), (2,2), (0,2), (-2,2), (-2,0), (-2,-2), (0,-2), (2,-2) ]
 bodyTypes = [ Open, Closed ]
-velocities = [ ((-1),(-1)), (0,(-1)), (1,(-1)), ((-1),0), (0,0), (1,0), ((-1),1), (0,1), (1,1) ]
+velocities = [ (-1,-1), (0,-1), (1,-1), (-1,0), (0,0), (1,0), (-1,1), (0,1), (1,1) ]
 testBody velocity bodyType (x,y) = setBodyVelocity velocity (fromJust $ newBody bodyType (x-1) (y-1) (x+1) (y+1))
 
 printVel (vx,vy) = putStrLn . concat $ ["vel: ", "(",show . numerator $ vx, ",", show . numerator $ vy, ")" ]
@@ -29,7 +29,7 @@ tests = do
     printVel vel
     print $ getBodyCollisionTimeToZero myBody
     x <- getChar
-    putStrLn $ [x]
+    putStrLn [x]
 
 
 testAll :: IO ()
